@@ -4,7 +4,11 @@ import (
 	"challenge/internal/domain"
 	"challenge/internal/repository"
 	"errors"
+	"strconv"
+	"sync/atomic"
 )
+
+var idCounter atomic.Int64
 
 type BookUsecase struct {
 	repo repository.BookRepository
@@ -17,6 +21,9 @@ func NewBookUsecase(r repository.BookRepository) *BookUsecase {
 func (u *BookUsecase) Create(book *domain.Book) error {
 	if book.Title == "" || book.Author == "" {
 		return errors.New("invalid input")
+	}
+	if book.ID == "" {
+		book.ID = strconv.FormatInt(idCounter.Add(1), 10)
 	}
 	return u.repo.Create(book)
 }

@@ -40,6 +40,9 @@ func (h *BookHandler) GetAll(c *gin.Context) {
 	}
 
 	books, _ := h.usecase.GetAll(author, page, limit)
+	if books == nil {
+		books = []domain.Book{}
+	}
 	c.JSON(http.StatusOK, books)
 }
 
