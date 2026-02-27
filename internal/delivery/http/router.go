@@ -2,7 +2,6 @@ package http
 
 import (
 	"challenge/internal/delivery/http/handler"
-	"challenge/internal/delivery/http/middleware"
 	"challenge/internal/usecase"
 
 	"github.com/gin-gonic/gin"
@@ -22,13 +21,13 @@ func NewRouter(bookUC *usecase.BookUsecase, authUC *usecase.AuthUsecase) *gin.En
 	r.POST("/books", bookHandler.Create)
 
 	protected := r.Group("/")
-	protected.Use(middleware.AuthMiddleware())
-	{
-		protected.GET("/books", bookHandler.GetAll)
-		protected.GET("/books/:id", bookHandler.GetByID)
-		protected.PUT("/books/:id", bookHandler.Update)
-		protected.DELETE("/books/:id", bookHandler.Delete)
-	}
+	// protected.Use(middleware.AuthMiddleware())
+	// {
+	protected.GET("/books", bookHandler.GetAll)
+	protected.GET("/books/:id", bookHandler.GetByID)
+	protected.PUT("/books/:id", bookHandler.Update)
+	protected.DELETE("/books/:id", bookHandler.Delete)
+	// }
 
 	return r
 }
