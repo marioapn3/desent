@@ -4,11 +4,9 @@ import (
 	"challenge/internal/domain"
 	"challenge/internal/repository"
 	"errors"
-	"strconv"
-	"sync/atomic"
-)
 
-var idCounter atomic.Int64
+	"github.com/google/uuid"
+)
 
 type BookUsecase struct {
 	repo repository.BookRepository
@@ -23,7 +21,7 @@ func (u *BookUsecase) Create(book *domain.Book) error {
 		return errors.New("invalid input")
 	}
 	if book.ID == "" {
-		book.ID = strconv.FormatInt(idCounter.Add(1), 10)
+		book.ID = uuid.New().String()
 	}
 	return u.repo.Create(book)
 }

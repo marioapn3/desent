@@ -20,16 +20,16 @@ func NewRouter(bookUC *usecase.BookUsecase, authUC *usecase.AuthUsecase) *gin.En
 	bookHandler := handler.NewBookHandler(bookUC)
 
 	r.POST("/books", bookHandler.Create)
-	r.GET("/books", bookHandler.GetAll)
+	r.DELETE("/books", bookHandler.DeleteAll)
 	r.GET("/books/:id", bookHandler.GetByID)
 	r.PUT("/books/:id", bookHandler.Update)
 	r.DELETE("/books/:id", bookHandler.Delete)
 
-	r.GET("/reset", bookHandler.DeleteAll)
-
 	protected := r.Group("/")
 	protected.Use(middleware.AuthMiddleware())
-	protected.GET("/protected/books", bookHandler.GetAll)
+	{
+		protected.GET("/books", bookHandler.GetAll)
+	}
 
 	return r
 }
