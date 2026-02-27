@@ -24,11 +24,22 @@ func main() {
 		log.Fatal("DATABASE_URL is required")
 	}
 
-	pool, err := pgxpool.New(context.Background(), dbURL)
+	cfg, err := pgxpool.ParseConfig(dbURL)
+	if err != nil {
+		log.Fatal("failed to parse database url:", err)
+	}
+	cfg.MinConns = 3
+	cfg.MaxConns = 10
+
+	pool, err := pgxpool.NewWithConfig(context.Background(), cfg)
 	if err != nil {
 		log.Fatal("failed to connect to database:", err)
 	}
 	defer pool.Close()
+
+	if err := pool.Ping(context.Background()); err != nil {
+		log.Fatal("failed to ping database:", err)
+	}
 
 	repo := postgres.NewBookPostgresRepository(pool)
 	if err := repo.InitTable(); err != nil {
