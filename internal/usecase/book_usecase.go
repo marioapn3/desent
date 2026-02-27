@@ -65,3 +65,7 @@ func (u *BookUsecase) Update(id string, book *domain.Book) error {
 func (u *BookUsecase) Delete(id string) error {
 	return u.repo.Delete(id)
 }
+
+func (u *BookUsecase) DeleteAll() error {
+	return u.repo.DeleteAll()
+}

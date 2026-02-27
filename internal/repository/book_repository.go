@@ -8,4 +8,5 @@ type BookRepository interface {
 	GetByID(id string) (*domain.Book, error)
 	Update(id string, book *domain.Book) error
 	Delete(id string) error
+	DeleteAll() error
 }

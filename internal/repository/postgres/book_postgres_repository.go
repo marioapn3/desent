@@ -95,3 +95,8 @@ func (r *BookPostgresRepository) Delete(id string) error {
 	}
 	return nil
 }
+
+func (r *BookPostgresRepository) DeleteAll() error {
+	_, err := r.pool.Exec(context.Background(), "DELETE FROM books")
+	return err
+}

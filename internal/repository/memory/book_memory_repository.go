@@ -67,3 +67,10 @@ func (r *BookMemoryRepository) Delete(id string) error {
 	delete(r.data, id)
 	return nil
 }
+
+func (r *BookMemoryRepository) DeleteAll() error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	r.data = make(map[string]domain.Book)
+	return nil
+}

@@ -86,3 +86,11 @@ func (h *BookHandler) Delete(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "deleted"})
 }
+
+func (h *BookHandler) DeleteAll(c *gin.Context) {
+	if err := h.usecase.DeleteAll(); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "all books deleted"})
+}
