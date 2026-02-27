@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"io"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,10 +12,10 @@ func Ping(c *gin.Context) {
 }
 
 func Echo(c *gin.Context) {
-	var bodyReq any
-	if err := c.ShouldBindJSON(&bodyReq); err != nil {
+	body, err := io.ReadAll(c.Request.Body)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, bodyReq)
+	c.Data(http.StatusOK, "application/json", body)
 }
