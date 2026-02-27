@@ -56,13 +56,25 @@ func (h *BookHandler) GetByID(c *gin.Context) {
 }
 
 func (h *BookHandler) Update(c *gin.Context) {
-	var book domain.Book
-	c.ShouldBindJSON(&book)
-	err := h.usecase.Update(c.Param("id"), &book)
+	id := c.Param("id")
+	existing, err := h.usecase.GetByID(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "not found"})
 		return
 	}
+	var book domain.Book
+	c.ShouldBindJSON(&book)
+	book.ID = id
+	if book.Title == "" {
+		book.Title = existing.Title
+	}
+	if book.Author == "" {
+		book.Author = existing.Author
+	}
+	if book.Year == 0 {
+		book.Year = existing.Year
+	}
+	h.usecase.Update(id, &book)
 	c.JSON(http.StatusOK, book)
 }
 
